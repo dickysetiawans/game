@@ -27,11 +27,19 @@ YELLOW_LASER = pygame.image.load(os.path.join("assets", "laser_ship.png"))
 #Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background.png")), (WIDTH, HEIGHT))
 
-BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background1.png")), (WIDTH, HEIGHT))
+pygame.mixer.init()
+hit_sound = pygame.mixer.Sound("235968__tommccann__explosion-01.wav")
+enemy_hit_sound = pygame.mixer.Sound("Shotgun_Blast-Jim_Rogers-1914772763.wav")
+shoot_sound = pygame.mixer.Sound("sf_laser_15.mp3")
 
 
+hit_sound.set_volume(0.05)
+enemy_hit_sound.set_volume(0.50)
+shoot_sound.set_volume(0.50)
 
-
+pygame.mixer.music.load("l.ogg")
+pygame.mixer.music.play(-1, 0.1)
+pygame.mixer.music.set_volume(1.00)
 
 
 class Laser:
@@ -112,7 +120,7 @@ class Player(Ship):
 	def shoot(self):
 		if self.cool_down_counter == 0:
 			laser = Laser(self.x, self.y, self.laser_img)
-
+			shoot_sound.play()
 			self.lasers.append(laser)
 			self.cool_down_counter = 1		
 		
@@ -123,7 +131,7 @@ class Player(Ship):
 			for obj in objs: 
 				if laser.collision(obj):
 					if objs.remove(obj):
-						draw_score()
+					enemy_hit_sound.play()	
 
 	def draw(self, window):
 		super().draw(window)
